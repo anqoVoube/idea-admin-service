@@ -1,17 +1,34 @@
+require('dotenv').config();
 const express = require('express');
 const app = express();
-const jwt = require('jsonwebtoken');
-const bcrypt = require('bcrypt');
-const User = require('./models/User');
-const routes = require('./routes');
+const mongoURL = process.env.MONGO_URL;
+const dbName = process.env.MONGO_DB_NAME;
+const connectDB = require("./database/mongo")
+const mongoose = require('mongoose')
+const routes = require('./route/index')
+const cookieParser = require('cookie-parser')
+const userSetterMiddleware = require('./middleware/setUser')
 
-// Register the routes with the app
-// Middleware to parse JSON request body
+
+
+connectDB();
+app.use(cookieParser())
 app.use(express.json());
+app.use(userSetterMiddleware);
+
 app.use('/', routes);
 
 
+
+// set user as a req.user
+
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
+
+
+mongoose.connection.once("open", () => {
+    console.log("Connected to MongoDB");
+    app.listen(PORT, () => {
     console.log(`Server started on port ${PORT}`);
 });
+})
+

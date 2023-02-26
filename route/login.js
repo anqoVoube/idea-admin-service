@@ -1,10 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcrypt');
-const User = require('../models/User');
+const User = require('../model/User');
+const jwt = require('jsonwebtoken');
 
-
-router.post('/login', async (req, res) => {
+router.post('/', async (req, res) => {
     try {
         // Find user by username
         const user = await User.findOne({ username: req.body.username });
@@ -29,7 +29,7 @@ router.post('/login', async (req, res) => {
         // Create access token with expiration time of 15 minutes
         const accessToken = jwt.sign(
             accessTokenPayload,
-            process.env.ACCESS_TOKEN_SECRET,
+            process.env.JWT_SECRET,
             { expiresIn: '15m' }
         );
 
@@ -42,7 +42,7 @@ router.post('/login', async (req, res) => {
         // Create refresh token with expiration time of 7 days
         const refreshToken = jwt.sign(
             refreshTokenPayload,
-            process.env.REFRESH_TOKEN_SECRET,
+            process.env.JWT_SECRET,
             { expiresIn: '7d' }
         );
 
