@@ -8,7 +8,7 @@ const hasPermission = require('../middleware/permission/role')
 const ROLES = require('../middleware/permission/static')
 
 
-router.post('/', isAuthenticated, hasPermission(ROLES.superUser), async (req, res) => {
+router.post('/',  async (req, res) => {
     try {
         // Generate salt and hash password
         const salt = await bcrypt.genSalt(10);
@@ -17,10 +17,14 @@ router.post('/', isAuthenticated, hasPermission(ROLES.superUser), async (req, re
             name: req.body.company_name
         })
         const savedCompany = await company.save();
+        const validatedPermissions = req.body.permissions.filter(
+            permission => Object.values(ROLES).includes(permission)
+        )
         // Create new user
         const user = new User({
             username: req.body.username,
             password: hashedPassword,
+            permissions: validatedPermissions,
             company: savedCompany._id
         });
 

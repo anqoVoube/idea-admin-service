@@ -19,13 +19,12 @@ const userSchema = new mongoose.Schema({
         default: Date.now
     },
     permissions: [{
-        type: mongoose.Schema.Types.ObjectId,
-        required: true,
-        ref: 'Permission'
+        type: String,
+        required: true
     }],
     company: {
         type: mongoose.Schema.Types.ObjectId,
-        required: false,
+        required: true,
         ref: 'Company'
     }
 });
