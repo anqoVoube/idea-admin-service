@@ -5,6 +5,10 @@ const companySchema = new mongoose.Schema({
         type: String,
         required: true,
         unique: true
+    },
+    isPrivate: {
+        type: Boolean,
+        default: false
     }
 });
 

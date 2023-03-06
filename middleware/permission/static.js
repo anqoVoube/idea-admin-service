@@ -1,5 +1,4 @@
 const ROLES = {
-    superUser: "superuser",
     head: "head",
     cashier: "cashier"
     // ...

@@ -1,10 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcrypt');
-const User = require('../model/User');
+const User = require('../../model/User');
+const requestSchema = require('./schema');
+const validate = require('../../utils/validator');
 
-
-router.post('/', async (req, res) => {
+router.post('/', validate(requestSchema), async (req, res) => {
     try {
         // Generate salt and hash password
         const salt = await bcrypt.genSalt(10);
@@ -17,7 +18,7 @@ router.post('/', async (req, res) => {
         });
 
         // Save user to database
-        const savedUser = await user.save();
+        await user.save();
 
         // Respond with success message
         res.json({ message: 'User registered successfully' });
